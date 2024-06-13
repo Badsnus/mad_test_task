@@ -8,7 +8,7 @@ app = FastAPI()
 
 
 @app.post("/upload")
-async def create_file(file: Annotated[bytes, File()], key: Annotated[str, Form()]):
+async def upload_file(file: Annotated[bytes, File()], key: Annotated[str, Form()]) -> dict:
     s3.put_object(
         Body=file,
         Bucket=BUCKET_NAME,
@@ -16,3 +16,9 @@ async def create_file(file: Annotated[bytes, File()], key: Annotated[str, Form()
         ContentType='application/octet-stream',
     )
     return {'url': DOWNLOAD_URL + f'/{key}'}
+
+
+@app.delete('/delete/{key}')
+async def delete_file(key: str) -> dict:
+    s3.delete_object(Bucket=BUCKET_NAME, Key=key)
+    return {'status': 'ok'}
