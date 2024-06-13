@@ -19,7 +19,6 @@ async def root():
 
 @app.get("/memes")
 async def root(db: DB = Depends(get_db)):
-    print(db.mem.session)
     return []
 
 
