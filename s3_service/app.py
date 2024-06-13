@@ -12,7 +12,7 @@ async def ping():
     return 'ok'
 
 
-@app.post("/upload")
+@app.post('/upload')
 async def upload_file(file: Annotated[bytes, File()], key: Annotated[str, Form()]) -> dict:
     s3.put_object(
         Body=file,
