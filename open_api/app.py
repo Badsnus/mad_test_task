@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI
 
+from config.config import s3_api
 from models import create_all_tables
 from repo.db import DB, get_db
 
@@ -12,31 +13,26 @@ async def on_startup():
     await create_all_tables()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
 @app.get("/memes")
-async def root(db: DB = Depends(get_db)):
+async def get_mems(db: DB = Depends(get_db)):
     return []
 
 
 @app.get("/memes/{id}")
-async def root(id: int):
+async def get_mem(id: int):
     return {'id': id}
 
 
 @app.post("/memes")
-async def root(id: int):
+async def create_mem(id: int, db: DB = Depends(get_db)):
     return {}
 
 
 @app.put("/memes/{id}")
-async def root(id: int):
+async def update_mem(id: int):
     return {'id': id}
 
 
 @app.delete("/memes/{id}")
-async def root(id: int):
+async def delete_mem(id: int):
     return {'id': id}

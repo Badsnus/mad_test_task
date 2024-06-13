@@ -12,8 +12,8 @@ class MemRepo:
     async def get(self, uuid: str) -> Mem | None:
         return await self.session.scalar(select(Mem).filter(Mem.uuid == uuid))
 
-    async def create(self, text: str) -> Mem:
-        mem = Mem(text=text)
+    async def create(self, text: str, file_extension: str) -> Mem:
+        mem = Mem(text=text, file_extension=file_extension)
 
         self.session.add(mem)
         await self.session.commit()
