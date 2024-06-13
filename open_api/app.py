@@ -14,20 +14,20 @@ app = FastAPI()
 s3_api = S3Api(S3_API_URL)
 
 
-@app.on_event("startup")
+@app.on_event('startup')
 async def on_startup():
     # Можно переделать на alembic
     await create_all_tables()
 
 
-@app.get("/memes")
+@app.get('/memes')
 async def get_mems(db: DB = Depends(get_db),
                    limit: int = 10,
                    offset: int = 0) -> list[MemSchema]:
     return await db.mem.all(limit=limit, offset=offset)
 
 
-@app.get("/memes/{uuid}")
+@app.get('/memes/{uuid}')
 async def get_mem(uuid: str,
                   db: DB = Depends(get_db)) -> MemSchema | StatusSchema:
     mem = await db.mem.get(uuid)
@@ -36,7 +36,7 @@ async def get_mem(uuid: str,
     return mem
 
 
-@app.post("/memes")
+@app.post('/memes')
 async def create_mem(file: Annotated[UploadFile, File()],
                      text: Annotated[str, Form()] = '',
                      db: DB = Depends(get_db)) -> MemSchema:
@@ -48,7 +48,7 @@ async def create_mem(file: Annotated[UploadFile, File()],
     return mem
 
 
-@app.put("/memes/{uuid}")
+@app.put('/memes/{uuid}')
 async def update_mem(uuid: str,
                      file: Annotated[UploadFile, File()],
                      text: Annotated[str, Form()] = '',
@@ -68,7 +68,7 @@ async def update_mem(uuid: str,
     return mem
 
 
-@app.delete("/memes/{uuid}")
+@app.delete('/memes/{uuid}')
 async def delete_mem(uuid: str,
                      db: DB = Depends(get_db)) -> StatusSchema:
     mem = await db.mem.get(uuid)
