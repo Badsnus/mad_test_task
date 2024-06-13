@@ -19,7 +19,7 @@ class MemRepo:
         await self.session.commit()
         return mem
 
-    async def update(self, uuid: str, **kwargs) -> Mem:
+    async def update(self, uuid: str, **kwargs) -> Mem | None:
         stmt = (
             update(Mem)
             .where(Mem.uuid == uuid)
