@@ -48,11 +48,26 @@ async def create_mem(file: Annotated[UploadFile, File()],
     return mem
 
 
-@app.put("/memes/{id}")
-async def update_mem(id: int):
-    return {'id': id}
+@app.put("/memes/{uuid}")
+async def update_mem(uuid: str,
+                     file: Annotated[UploadFile, File()],
+                     text: Annotated[str, Form()] = '',
+                     db: DB = Depends(get_db)) -> MemSchema:
+    mem = await db.mem.get(uuid)
+    old_file_extension = mem.file_extension
+
+    await db.mem.update(
+        mem,
+        text=text,
+        file_extension=get_file_extension(file.filename),
+        url=None,
+    )
+
+    asyncio.create_task(s3_api.update(db, mem, file, old_file_extension))  # специально без await
+
+    return mem
 
 
-@app.delete("/memes/{id}")
+@app.delete("/memes/{uuid}")
 async def delete_mem(id: int):
     return {'id': id}
