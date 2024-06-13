@@ -20,5 +20,8 @@ async def upload_file(file: Annotated[bytes, File()], key: Annotated[str, Form()
 
 @app.delete('/delete/{key}')
 async def delete_file(key: str) -> dict:
-    s3.delete_object(Bucket=BUCKET_NAME, Key=key)
+    s3.delete_object(
+        Bucket=BUCKET_NAME,
+        Key=key,
+    )
     return {'status': 'ok'}
