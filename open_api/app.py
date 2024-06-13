@@ -6,7 +6,7 @@ from fastapi import Depends, FastAPI, File, Form, UploadFile
 from config.config import S3_API_URL
 from models import create_all_tables
 from repo.db import DB, get_db
-from schemas import MemSchema
+from schemas import ErrorSchema, MemSchema
 from services import get_file_extension, S3Api
 
 app = FastAPI()
@@ -29,10 +29,10 @@ async def get_mems(db: DB = Depends(get_db),
 
 @app.get("/memes/{uuid}")
 async def get_mem(uuid: str,
-                  db: DB = Depends(get_db)) -> MemSchema | dict:
+                  db: DB = Depends(get_db)) -> MemSchema | ErrorSchema:
     mem = await db.mem.get(uuid)
     if mem is None:
-        return {'error': 'not found'}
+        return ErrorSchema(error='not found')
     return mem
 
 
