@@ -19,15 +19,11 @@ class MemRepo:
         await self.session.commit()
         return mem
 
-    async def update(self, uuid: str, **kwargs) -> Mem | None:
-        stmt = (
-            update(Mem)
-            .where(Mem.uuid == uuid)
-            .values(**kwargs)
-            .returning(Mem)
-        )
+    async def update(self, mem: Mem, **kwargs) -> Mem:
+        for key, value in kwargs.items():
+            setattr(mem, key, value)
 
-        mem = (await self.session.execute(stmt)).fetchone()
+        self.session.add(mem)
         await self.session.commit()
         return mem
 
