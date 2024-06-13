@@ -27,9 +27,13 @@ async def get_mems(db: DB = Depends(get_db),
     return await db.mem.all(limit=limit, offset=offset)
 
 
-@app.get("/memes/{id}")
-async def get_mem(id: int):
-    return {'id': id}
+@app.get("/memes/{uuid}")
+async def get_mem(uuid: str,
+                  db: DB = Depends(get_db)) -> MemSchema | dict:
+    mem = await db.mem.get(uuid)
+    if mem is None:
+        return {'error': 'not found'}
+    return mem
 
 
 @app.post("/memes")
