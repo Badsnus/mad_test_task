@@ -1,4 +1,6 @@
-from sqlalchemy import delete, select, update
+from typing import Sequence
+
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import Mem
@@ -8,6 +10,11 @@ class MemRepo:
 
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
+
+    async def all(self, limit: int, offset: int) -> Sequence[Mem]:
+        return (await self.session.scalars(
+            select(Mem).offset(offset).limit(limit),
+        )).all()
 
     async def get(self, uuid: str) -> Mem | None:
         return await self.session.scalar(select(Mem).filter(Mem.uuid == uuid))
