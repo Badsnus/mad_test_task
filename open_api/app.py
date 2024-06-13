@@ -1,6 +1,15 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
+
+from models import create_all_tables
+from repo.db import DB, get_db
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def on_startup():
+    # Можно переделать на alembic
+    await create_all_tables()
 
 
 @app.get("/")
@@ -9,7 +18,8 @@ async def root():
 
 
 @app.get("/memes")
-async def root():
+async def root(db: DB = Depends(get_db)):
+    print(db.mem.session)
     return []
 
 
