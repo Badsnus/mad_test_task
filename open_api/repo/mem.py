@@ -34,6 +34,6 @@ class MemRepo:
         await self.session.commit()
         return mem
 
-    async def delete(self, uuid: str) -> None:
-        await self.session.execute(delete(Mem).where(Mem.uuid == uuid))
+    async def delete(self, mem: Mem) -> None:
+        await self.session.delete(mem)
         await self.session.commit()
