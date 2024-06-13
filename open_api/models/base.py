@@ -7,7 +7,7 @@ from config.config import DATABASE_URL
 
 Base = declarative_base()
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL)
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
